@@ -7,6 +7,9 @@ import { chatSession } from "../service/AIModal";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "/firebaseConfig.jsx";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import {
   Dialog,
@@ -17,11 +20,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-
 const CreateTrip = () => {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState();
   const [openDailog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -40,37 +43,56 @@ const CreateTrip = () => {
   });
 
   const onGenerateTrip = async () => {
+  try {
+    setLoading(true); // Start loading
+
     const user = localStorage.getItem("user");
-
     if (!user) {
-      setOpenDailog(true);
+      setOpenDialog(true);
+      setLoading(false); // Stop loading if no user
       return;
-    } else {
     }
 
-    if (
-      (formData?.noOfDays > 5 && !formData?.location) ||
-      !formData?.budget ||
-      !formData.traveler
-    ) {
+    if (!formData?.location || !formData?.budget || !formData.traveler) {
       alert("Please fill all details");
+      setLoading(false); // Stop loading if missing data
       return;
     }
 
-    const FINAL_PROMPT = AI_PROMPT.replace(
-      "{location}",
-      formData?.location?.label
-    )
+    const FINAL_PROMPT = AI_PROMPT
+      .replace("{location}", formData?.location?.label)
       .replace("{totalDays}", formData?.noOfDays)
       .replace("{traveler}", formData?.traveler)
-      .replace("{budget}", formData?.budget)
-      .replace("{totalDays}", formData?.noOfDays);
-
-    console.log(FINAL_PROMPT);
+      .replace("{budget}", formData?.budget);
 
     const result = await chatSession.sendMessage(FINAL_PROMPT);
     console.log(result?.response?.text());
-  };
+
+    await SaveAITrip(result?.response?.text());
+  } catch (error) {
+    console.error("Error generating trip:", error);
+  } finally {
+    setLoading(false); // Stop loading after completion
+  }
+};
+
+  const SaveAITrip = async (TripData) => {
+  try {
+    setLoading(true); // Start saving
+    const user = JSON.parse(localStorage.getItem("user"));
+    const docId = new Date().getTime().toString();
+    await setDoc(doc(db, "AITrips", docId), {
+      userSelection: formData,
+      tripData: JSON.parse(TripData),
+      userEmail: user?.email,
+      id: docId,
+    });
+  } catch (error) {
+    console.error("Error saving trip:", error);
+  } finally {
+    setLoading(false); // Stop loading after saving
+  }
+};
 
   const GetUserProfile = (tokenInfo) => {
     axios
@@ -173,7 +195,13 @@ const CreateTrip = () => {
       </div>
 
       <div className="my-10 flex justify-end">
-        <button onClick={onGenerateTrip}>Generate Trip</button>
+        <button disabled={loading} onClick={onGenerateTrip}>
+          {loading ? 
+            <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" />
+           : 
+            "Generate Trip"
+          }
+        </button>
       </div>
       <Dialog open={openDailog}>
         <DialogContent>
@@ -182,10 +210,12 @@ const CreateTrip = () => {
               <img src="/logo.svg" alt="" />
               <h2 className="font-bold text-lg mt-7 ">Sign In With Google</h2>
               <p>Sign In to the App with Google Authentication securely</p>
-              <button 
-              onClick={login}
-              className="w-full mt-5 flex items-center justify-center gap-3 ">
-                <FcGoogle  className="h-7 w-7"/>
+              <button
+                disabled={loading}
+                onClick={login}
+                className="w-full mt-5 flex items-center justify-center gap-3 "
+              >
+                <FcGoogle className="h-7 w-7" />
                 Sign In With Google
               </button>
             </DialogDescription>
