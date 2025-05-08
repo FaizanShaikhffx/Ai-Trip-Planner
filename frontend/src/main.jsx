@@ -6,13 +6,17 @@ import './index.css'
 import App from './App.jsx'
 import CreateTrip from './create-trip/index.jsx'
 import Header from './components/custom/Header.jsx'
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
       <Header/>
     <Routes>
       <Route path="/create-trip"  element={<CreateTrip/>} />
       <Route path="/"  element={<App/>} />
     </Routes>
+    </GoogleOAuthProvider>;
   </BrowserRouter>,
 )
