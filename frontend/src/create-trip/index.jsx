@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { SelectBudgetOptions, SelectTravelesList } from '../constants/options';
+import { AI_PROMPT } from '../constants/options';
+import { chatSession } from '../service/AIModal';
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(); 
@@ -19,11 +21,25 @@ const CreateTrip = () => {
       console.log(formData);
     }, [formData])
 
-    const onGenerateTrip = () =>{
-      if(formData?.noOfDays>5){
+    const onGenerateTrip = async() =>{
+      if(formData?.noOfDays>5 && !formData?.location || !formData?.budget || !formData.traveler){
+        alert("Please fill all details");
         return; 
       }
-      console.log(formData);
+    
+      const FINAL_PROMPT=AI_PROMPT
+      .replace('{location}', formData?.location?.label) 
+      .replace('{totalDays}', formData?.noOfDays)
+      .replace('{traveler}', formData?.traveler)
+      .replace('{budget}', formData?.budget)
+      .replace('{totalDays}', formData?.noOfDays)
+
+      console.log(FINAL_PROMPT);
+
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
+      console.log(result?.response?.text());
+      
+
       
     }
 
@@ -36,13 +52,16 @@ const CreateTrip = () => {
         <div>
           <h2 className='text-xl my-3 font-medium '>What is your destination of choice?</h2>
           <GooglePlacesAutocomplete
-            apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
-            selectProps={{
-            place, 
-            onChange: (v) => {setPlace(v); handleInputChange("location", v);
-            }
-            }}
-          />
+  apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+  selectProps={{
+    place,
+    onChange: (v) => {
+      setPlace(v);
+      handleInputChange("location", v);
+    }
+  }}
+/>
+
         </div>
 
         <div>
