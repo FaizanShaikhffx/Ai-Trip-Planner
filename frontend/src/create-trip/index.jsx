@@ -8,8 +8,9 @@ import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "/firebaseConfig.jsx";
+import { db } from "../service/firebaseConfig";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 import {
   Dialog,
@@ -20,12 +21,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+
 const CreateTrip = () => {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState();
   const [openDailog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate(); 
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -44,18 +47,18 @@ const CreateTrip = () => {
 
   const onGenerateTrip = async () => {
   try {
-    setLoading(true); // Start loading
+    setLoading(true); 
 
     const user = localStorage.getItem("user");
     if (!user) {
       setOpenDialog(true);
-      setLoading(false); // Stop loading if no user
+      setLoading(false); 
       return;
     }
 
     if (!formData?.location || !formData?.budget || !formData.traveler) {
       alert("Please fill all details");
-      setLoading(false); // Stop loading if missing data
+      setLoading(false); 
       return;
     }
 
@@ -72,13 +75,13 @@ const CreateTrip = () => {
   } catch (error) {
     console.error("Error generating trip:", error);
   } finally {
-    setLoading(false); // Stop loading after completion
+    setLoading(false);
   }
 };
 
   const SaveAITrip = async (TripData) => {
-  try {
-    setLoading(true); // Start saving
+  try { 
+    setLoading(true); 
     const user = JSON.parse(localStorage.getItem("user"));
     const docId = new Date().getTime().toString();
     await setDoc(doc(db, "AITrips", docId), {
@@ -87,11 +90,11 @@ const CreateTrip = () => {
       userEmail: user?.email,
       id: docId,
     });
+    navigate('/view-trip/'+docId)
+    setLoading(false); 
   } catch (error) {
     console.error("Error saving trip:", error);
-  } finally {
-    setLoading(false); // Stop loading after saving
-  }
+  } 
 };
 
   const GetUserProfile = (tokenInfo) => {
