@@ -1,25 +1,20 @@
-import React from 'react'
+import React from "react";
+import HotelCardItem from "./HotelCardItem";
 
-const Hotels = ({trip}) => {
+const Hotels = ({ trip }) => {
+
+  const hotelData = trip?.tripData?.hotels ? undefined || null : trip?.tripData?.hotelOptions; 
+
   return (
     <div>
-      <h2 className='font-bold text-xl mt-5'>Hotel Recommendation</h2>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-5 xl:grid-cols-4'>
-        {trip?.tripData?.hotels?.map((hotel, index)=>(
-          
-          <div key={index} className='hover:scale-105 cursor-pointer transition-all '>
-            <img src="/placeholder.jpg" className='rounded-lg ' alt="image" />
-            <div className='my-3 flex flex-col'>
-              <h2 className='font-medium'>{hotel?.name}</h2>
-              <h2 className='text-sx text-gray-500'> 📍{hotel?.address}</h2> 
-              <h2>⭐ {hotel?.rating} stars</h2>
-            </div>
-          </div>
-          
+      <h2 className="font-bold text-xl mt-5">Hotel Recommendation</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-5 xl:grid-cols-4">
+        {hotelData?.map((hotel, index) => (
+          <HotelCardItem hotel={hotel} />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Hotels
+export default Hotels;

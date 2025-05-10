@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import {db} from "../../service/firebaseConfig"
 import InfoSection from '../components/InfoSection';
 import Hotels from '../components/Hotels';
+import PlacesToVisit from '../components/PlacesToVisit';
+import Footer from './../components/Footer';
 
 const ViewTrip = () => {
   
@@ -34,8 +36,9 @@ const ViewTrip = () => {
       {/* Recommended Hotels */}
         <Hotels trip={trip}/>
       {/* Daily Plan */}
-
+        <PlacesToVisit trip={trip}/>
       {/* Footer   */}
+      <Footer trip={trip}/>
     </div>
   )
 }
