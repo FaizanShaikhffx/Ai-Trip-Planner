@@ -8,7 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../service/firebaseConfig";
+import { db } from "../service/firebaseConfig.jsx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 

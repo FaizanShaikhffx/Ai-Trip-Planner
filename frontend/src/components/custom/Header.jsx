@@ -61,6 +61,9 @@ const Header = () => {
       <div>
         {
           user? <div className='flex  items-center gap-3 '>
+            <Link to="/create-trip">
+            <button className='rounded-full'>➕ Create Trip</button>  
+            </Link>
             <Link to="/my-trips">
             <button className='rounded-full'>My Trips</button>  
             </Link>
