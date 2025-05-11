@@ -29,6 +29,7 @@ const CreateTrip = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate(); 
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -46,6 +47,8 @@ const CreateTrip = () => {
   });
 
   const onGenerateTrip = async () => {
+
+    
   try {
     setLoading(true); 
 
@@ -184,10 +187,10 @@ const CreateTrip = () => {
             <div
               key={index}
               className={`p-4 border border-gray-300 cursor-pointer rounded-lg hover:shadow-lg ${
-                formData?.traveler == item.people &&
+                formData?.traveler == item.id &&
                 "shadow-lg border-gray-500 "
               }`}
-              onClick={() => handleInputChange("traveler", item.people)}
+              onClick={() => handleInputChange("traveler", item.id)}
             >
               <h2 className="text-4xl">{item.icon}</h2>
               <h2 className="font-bold text-lg ">{item.title}</h2>
@@ -198,7 +201,7 @@ const CreateTrip = () => {
       </div>
 
       <div className="my-10 flex justify-end">
-        <button disabled={loading} onClick={onGenerateTrip}>
+        <button className="bg-gray-800 text-white  px-4 py-2 rounded-md shadow hover:bg-gray-900 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" disabled={loading} onClick={onGenerateTrip}>
           {loading ? 
             <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" />
            : 
@@ -206,21 +209,24 @@ const CreateTrip = () => {
           }
         </button>
       </div>
-      <Dialog open={openDailog}>
-        <DialogContent>
+      <Dialog open={openDailog} onOpenChange={setOpenDialog}>
+        <DialogContent className='bg-white'>
           <DialogHeader>
             <DialogDescription>
-              <img src="/logo.svg" alt="" />
+                          <div className='flex items-center'>
+                  <img src="/trip-logo.jpg" className='h-11' alt="" />
+                  <h2 className='font-bold text-[#f56551] text-[40px] pl-3 '>Trav<span className='text-[#654a8c]'>AI</span>ler</h2>
+                  </div>
               <h2 className="font-bold text-lg mt-7 ">Sign In With Google</h2>
               <p>Sign In to the App with Google Authentication securely</p>
               <button
-                disabled={loading}
-                onClick={login}
-                className="w-full mt-5 flex items-center justify-center gap-3 "
-              >
-                <FcGoogle className="h-7 w-7" />
-                Sign In With Google
-              </button>
+                              disabled={loading}
+                              onClick={login}
+                              className="w-full mt-5 flex bg-gray-200 cursor-pointer rounded-xl shadow-sm p-2 items-center justify-center gap-3 "
+                            >
+                              <FcGoogle className="h-7 w-7 " />
+                              Sign In With Google
+                            </button>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

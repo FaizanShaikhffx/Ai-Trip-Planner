@@ -2,7 +2,9 @@ import React from 'react';
 import PlaceCardItem from './PlaceCardItem';
 
 const PlacesToVisit = ({ trip, dailyItinerary = [] }) => {
-  const itinerary = trip?.tripData?.itinerary ? undefined || null : trip?.tripData?.dailyItinerary;
+  const itinerary = trip?.tripData?.itinerary 
+  || trip?.tripData?.dailyItinerary;
+
 
   return (
     <div>

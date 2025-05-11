@@ -5,6 +5,7 @@ import { db } from '@/service/firebaseConfig';
 import UserTripCardItem from './components/UserTripCardItem';
 
 
+
 const MyTrips = () => {
   
   const [userTrips, setUserTrips] = useState([])

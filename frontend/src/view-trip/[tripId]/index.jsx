@@ -38,7 +38,7 @@ const ViewTrip = () => {
       {/* Daily Plan */}
         <PlacesToVisit trip={trip}/>
       {/* Footer   */}
-      <Footer trip={trip}/>
+      {/* <Footer trip={trip}/> */}
     </div>
   )
 }

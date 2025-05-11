@@ -3,7 +3,10 @@ import HotelCardItem from "./HotelCardItem";
 
 const Hotels = ({ trip }) => {
 
-  const hotelData = trip?.tripData?.hotels ? undefined || null : trip?.tripData?.hotelOptions; 
+  const hotelData = trip?.tripData?.hotels 
+  || trip?.tripData?.hotel 
+  || trip?.tripData?.hotelOptions;
+
 
   return (
     <div>
