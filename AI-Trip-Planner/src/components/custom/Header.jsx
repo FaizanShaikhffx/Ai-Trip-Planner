@@ -68,7 +68,7 @@ const Header = () => {
             <button className='bg-gray-800 text-white font-bold px-4 py-2 rounded-md shadow hover:bg-gray-900 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500'>+ Create Trip</button>  
             </Link>
             <Link to="/my-trips">
-            <button className='bg-gray-800 text-white px-4  py-2 rounded-md shadow hover:bg-gray-900 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500'>My Trips</button>  
+            <button className='bg-gray-800 text-white px-4 font-bold  py-2 rounded-md shadow hover:bg-gray-900 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500'>My Trips</button>  
             </Link>
             <Popover>
               <PopoverTrigger >
