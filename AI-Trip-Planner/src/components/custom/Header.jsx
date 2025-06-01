@@ -52,7 +52,7 @@ const Header = () => {
   };
 
   return (
-    <div className="shadow-sm flex items-center justify-between px-3 py-2 w-full overflow-x-auto">
+    <div className="shadow-sm flex flex-wrap items-center justify-between px-3 py-2 w-full">
       {/* Logo */}
       <div className="flex items-center shrink-0">
         <img src="/trip-logo.jpg" className="h-7 sm:h-8" alt="logo" />
@@ -66,19 +66,19 @@ const Header = () => {
         {user ? (
           <>
             <Link to="/create-trip">
-              <button className="text-sm px-2 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
+              <button className="text-xs sm:text-sm px-2 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
                 + Trip
               </button>
             </Link>
             <Link to="/my-trips">
-              <button className="text-sm px-2 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
+              <button className="text-xs sm:text-sm px-2 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
                 My Trips
               </button>
             </Link>
             <Popover>
               <PopoverTrigger>
                 <img
-                  className="h-8 w-8 rounded-full cursor-pointer hidden md:block"
+                  className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 rounded-full cursor-pointer flex-shrink-0 min-w-0"
                   src={user?.picture}
                   alt="user"
                 />
@@ -100,7 +100,7 @@ const Header = () => {
         ) : (
           <button
             onClick={() => setOpenDialog(true)}
-            className="text-sm px-3 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition"
+            className="text-xs sm:text-sm px-3 py-1 bg-gray-800 text-white rounded hover:bg-gray-900 transition"
           >
             Sign In
           </button>
