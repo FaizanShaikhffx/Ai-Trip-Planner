@@ -30,6 +30,20 @@ const CreateTrip = () => {
 
   const navigate = useNavigate(); 
 
+  const logErrorToFirestore = async (message, details = {}, level = "error") => {
+    try {
+      const logDocId = new Date().getTime().toString();
+      await setDoc(doc(db, "clientLogs", logDocId), {
+        timestamp: new Date(),
+        message: message,
+        details: details,
+        level: level,
+      });
+    } catch (logError) {
+      console.error("Failed to log error to Firestore:", logError);
+    }
+  };
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -86,17 +100,43 @@ const CreateTrip = () => {
   try { 
     setLoading(true); 
     const user = JSON.parse(localStorage.getItem("user"));
+
+    await logErrorToFirestore("Attempting to save trip", {
+      userObject: user,
+      userEmail: user?.email,
+      formData: formData
+    }, "info");
+
+    if (!user || !user.email) {
+      console.error("User or user email is missing. Cannot save trip without user authentication.");
+      await logErrorToFirestore("User authentication missing during trip save attempt", { user: user });
+      setLoading(false);
+      return; 
+    }
+    
+    let parsedTripData;
+    try {
+      parsedTripData = JSON.parse(TripData);
+      await logErrorToFirestore("AI TripData parsed successfully", { parsedData: parsedTripData }, "info");
+    } catch (parseError) {
+      console.error("Error parsing AI TripData:", parseError);
+      await logErrorToFirestore("Error parsing AI TripData", { parseError: parseError.message, TripData: TripData });
+      setLoading(false);
+      return;
+    }
+
     const docId = new Date().getTime().toString();
     await setDoc(doc(db, "AITrips", docId), {
       userSelection: formData,
-      tripData: JSON.parse(TripData),
-      userEmail: user?.email,
+      tripData: parsedTripData,
+      userEmail: user.email,
       id: docId,
     });
     navigate('/view-trip/'+docId)
     setLoading(false); 
   } catch (error) {
     console.error("Error saving trip:", error);
+    await logErrorToFirestore("Failed to save trip to Firestore", { error: error.message, code: error.code, stack: error.stack });
   } 
 };
 
